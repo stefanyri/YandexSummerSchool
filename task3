@@ -1,0 +1,21 @@
+import re
+from collections import Counter
+def password_quality_check(password):
+    if len(password)>=7:
+        if len([i for i in password if i.isdigit()])!=0:
+            if password.lower() != password:
+                if password.upper() != password:
+                    if re.search(r'[^A-Za-z0-9]',password) is None:
+                        if len([i for i,j in Counter(password).items() if j>1])==0:
+                            return('your password is good')
+                        else: return("password may not contain double elements")
+                    else: return('password must include only latin letters and numbers')
+                else: return('password must include lowercase letters')
+            else: return('password must include uppercase letters')
+        else:return('password must include at least one number')
+    
+       
+    else: return('password is too short,should be minimum 7 characters length')
+    return 0
+    
+print(password_quality_check('ThisshouldbeNicePass7'))
