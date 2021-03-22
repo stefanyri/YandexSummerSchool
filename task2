@@ -1,0 +1,10 @@
+SELECT count(user_id)
+from active_plus as ap inner join market_orders as mo 
+on ap.user_id = mo.user_id 
+where (SELECT count(order_id)
+from active_plus as ap inner join market_orders as mo 
+on ap.user_id = mo.user_id
+where utc_creation_dttm between utc_dttm_from and utc_dttm_to)/(SELECT count(order_id)
+from active_plus as ap inner join market_orders as mo 
+on ap.user_id = mo.user_id
+where ap.user_id = mo.user_id )>0.8
