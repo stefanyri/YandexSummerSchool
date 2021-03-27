@@ -1,0 +1,26 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+#cмотрим формат данных
+data = pd.read_csv('music_data.csv')
+data.head()
+
+#по графику примерно оцениваем уровень популярности жанра техно
+plt.figure(figsize=(25,5))
+plt.hist(data['track_genre'])
+
+#смотрим размер всей таблицы
+data['track_genre'].value_counts()
+
+data.query('track_genre == "TECHNO"').track_genre.count()
+
+target_aud = data.query('track_genre == "TECHNO"') #будем работать только с логами прослушивания техно
+
+#сгруппируем данные по пользователям - какой пользователь какие треки техно слушал
+target_grouped = target_aud.groupby('user_id')['track_id'].apply(lambda x: x.unique()).reset_index() 
+#заменим id треков на их количество для каждого пользователя
+target_grouped['track_id'] = [i.size for i in target_grouped['track_id']]
+#отсортируем по убыванию - в зависимости от количества доступных для мероприятия билетов определяется размер рассылки
+#при грубом расчете если на 70 отправленных писем придет хотя бы один человек, то реклама окупится
+target_grouped.sort_values(['track_id'], ascending=[False]).reset_index()
